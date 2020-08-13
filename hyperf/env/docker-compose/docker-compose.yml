@@ -1,0 +1,42 @@
+version: '3.3'
+services:
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+    links:
+      - php-fpm
+    volumes:
+      - ./code:/var/www/html
+      - ./nginx/conf/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/var/log/nginx
+  php-fpm:
+    build: ./php73
+    ports:
+      - "8088:8088"
+      - "9501:9501"
+      - "9502:9502"
+      - "9503:9503"
+      - "9504:9504"
+    volumes:
+      - ./code:/var/www/html
+      - ./php73/php.ini:/usr/local/etc/php/php.ini
+      - ./php73/conf.d:/usr/local/etc/php/conf.d
+    links:
+      - mysql
+      - redis
+  mysql:
+    image: mysql:5.7.26
+    restart: always
+    privileged: true
+    command: --innodb-use-native-aio=0
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    volumes:
+      - ./mysql/data/mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  redis:
+    image: "redis:alpine"
+    #ports:
+    #  - "6379:6379"
