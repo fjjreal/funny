@@ -1,3 +1,4 @@
+# 创建 mysql/data 文件夹
 # docker 指令
 - docker-compose.exe up -d  // 创建并启动
 - docker-compose.exe restart// 重启
